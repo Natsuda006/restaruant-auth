@@ -5,23 +5,23 @@ const Restaurant = sequelize.define("restaurant", {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
-    autoIncrement: true,   // แก้จาก autoincrement เป็น autoIncrement
+    autoIncrement: true,
   },
-  name: {
+  title: {
     type: DataTypes.STRING,
-    allowNull: false,       // แก้จาก allNull เป็น allowNull
+    allowNull: false,   // <-- แก้จาก allNull เป็น allowNull
   },
   type: {
     type: DataTypes.STRING,
-    allowNull: false,       // แก้จาก allNull เป็น allowNull
+    allowNull: false,   // <-- แก้จาก allNull เป็น allowNull
   },
-  imageUrl: {
+  img: {
     type: DataTypes.STRING,
-    allowNull: false,       // แก้จาก allNull เป็น allowNull
+    allowNull: false,   // <-- แก้จาก allNull เป็น allowNull
   },
 });
 
-// สร้างตาราง (ถ้าไม่มี) โดยไม่ลบทิ้ง (force: false)
+// สร้างตาราง ถ้ายังไม่มี หรือถ้ามีแล้วจะลบทิ้งและสร้างใหม่ (force:true)
 Restaurant.sync({ force: false })
   .then(() => {
     console.log("Table created or already exists");
@@ -30,4 +30,4 @@ Restaurant.sync({ force: false })
     console.log("Error creating table", error);
   });
 
-export default Restaurant;   // แก้ชื่อที่ export ให้ตรงกับ const
+export default Restaurant;
