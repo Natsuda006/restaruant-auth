@@ -13,7 +13,7 @@ app.get("/", (req, res) => {
 });
 
 //use router
-app.use("/api/v1/restaurants",restaurantRouter);
+app.use("/api/v1/restaurants", restaurantRouter);
 
 app.listen(PORT,()=>{
     console.log("Listening to http://localhost:" + PORT);

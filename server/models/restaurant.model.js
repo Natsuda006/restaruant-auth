@@ -9,15 +9,15 @@ const Restaurant = sequelize.define("restaurant", {
   },
   title: {
     type: DataTypes.STRING,
-    allowNull: false,   // <-- แก้จาก allNull เป็น allowNull
+    allowNull: false,  
   },
   type: {
     type: DataTypes.STRING,
-    allowNull: false,   // <-- แก้จาก allNull เป็น allowNull
+    allowNull: false,   
   },
   img: {
     type: DataTypes.STRING,
-    allowNull: false,   // <-- แก้จาก allNull เป็น allowNull
+    allowNull: false,   
   },
 });
 
