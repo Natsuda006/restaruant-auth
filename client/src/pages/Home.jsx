@@ -3,11 +3,9 @@ import Navbar from "../components/Navbar";
 import Restauant from "../components/Restauant";
 const Home = () => {
 const [restaurants, setRestaurants] = useState([]);
-const [keyword, setKeyword] = useState("");
 const [filterRestaurants, setFilterRestaurants] = useState([]);
-const handleSearch = (e) =>{
-  setKeyword(e.target.value);
-  if(e.target.value === ""){
+const handleSearch = (keyword) =>{
+  if(keyword === ""){
       setFilterRestaurants(restaurants)
     return;
   }
@@ -24,7 +22,7 @@ const handleSearch = (e) =>{
 
   useEffect(() => {
     //call api: getAllRestaurants
-    fetch("http://localhost:3000/restaurants").then((res)=>{
+    fetch("http://localhost:5000/api/v1/restaurants/").then((res)=>{
       //convert to json
       return res.json()
     }).then((Response)=>{
@@ -62,7 +60,7 @@ const handleSearch = (e) =>{
               <path d="m21 21-4.3-4.3"></path>
             </g>
           </svg>
-          <input type="search" name = "keyword" onChange={handleSearch} required placeholder="Search"/>
+          <input type="search" name = "keyword" onChange={(e) => handleSearch(e.target.value)} required placeholder="Search"/>
         </label>
       </div>
       <div>
