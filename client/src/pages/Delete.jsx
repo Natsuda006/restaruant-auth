@@ -13,7 +13,7 @@ const Delete = () => {
 
   // 2. Get Restaurant by ID
   useEffect(() => {
-    fetch("http://localhost:5000/api/v1/restaurant/" + id)
+    fetch("http://localhost:5000/api/v1/restaurants/" + id)
       .then((res) => res.json())
       .then((response) => setRestaurant(response))
       .catch((err) => console.log(err.message));
@@ -25,7 +25,7 @@ const Delete = () => {
     if (!confirmDelete) return;
 
     try {
-      const response = await fetch("http://localhost:5000/api/v1/restaurant/" + id, {
+      const response = await fetch("http://localhost:5000/api/v1/restaurants/" + id, {
         method: "DELETE",
       });
       if (response.ok) {
