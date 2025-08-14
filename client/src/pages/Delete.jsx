@@ -1,97 +1,83 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from "../components/Navbar";
+import restaurantService from "../service/restautant.service";
+import Swal from "sweetalert2";
 
 const Delete = () => {
-  // 1. Get Id from Url
   const { id } = useParams();
+  const navigate = useNavigate();
+
   const [restaurant, setRestaurant] = useState({
     title: '',
     type: '',
     img: '',
   });
 
-  // 2. Get Restaurant by ID
   useEffect(() => {
-    fetch("http://localhost:5000/api/v1/restaurants/" + id)
-      .then((res) => res.json())
-      .then((response) => setRestaurant(response))
-      .catch((err) => console.log(err.message));
+    const fetchRestaurant = async () => {
+      try {
+        const data = await restaurantService.getRestaurantById(id);
+        setRestaurant(data);
+      } catch (err) {
+        console.log("Error fetching restaurant:", err.message);
+      }
+    };
+    fetchRestaurant();
   }, [id]);
-  
-  //3. alert confrim
+
   const handleSubmit = async () => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this restaurant?");
-    if (!confirmDelete) return;
+    const result = await Swal.fire({
+      title: "Are you sure you want to delete this restaurant?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "Cancel"
+    });
+    if (!result.isConfirmed) return;
 
     try {
-      const response = await fetch("http://localhost:5000/api/v1/restaurants/" + id, {
-        method: "DELETE",
+      await restaurantService.deleteRestaurant(id);
+      await Swal.fire({
+        icon: "success",
+        title: "Restaurant deleted successfully.",
+        ะtext: "The restaurant has been removed from the list.",
+        timer: 1500,
+        showConfirmButton:true
       });
-      if (response.ok) {
-        alert("Restaurant deleted successfully.");
-        setRestaurant({
-          title: '',
-          type: '',
-          img: '',
-        });
-      }
+      navigate("/");
     } catch (error) {
       console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "Error deleting restaurant.",
+        text: error?.response?.data?.message || error.message,
+      });
     }
   };
 
   return (
     <div className="container mx-auto">
       <Navbar />
-      <div>
-        <h1 className="title justify-center text-3xl text-center m-5 p-5">
-          Grab Restaurant Delete Form
-        </h1>
-      </div>
-      <div className="flex flex-center justify-center">
-        <fieldset className="fieldset">
-          <legend className="fieldset-legend">Restaurant Title:</legend>
-          <input
-            type="text"
-            className="input flex items-center gap-2 w-2xl"
-            placeholder="Title..."
-            onChange={() => {}}
-            value={restaurant.title}
-            name="title"
-            disabled
-          />
-        </fieldset>
-      </div>
-      <div className="flex flex-center justify-center">
-        <fieldset className="fieldset">
-          <legend className="fieldset-legend">Restaurant Type:</legend>
-          <input
-            type="text"
-            className="input flex items-center gap-2 w-2xl"
-            placeholder="Type..."
-            onChange={() => {}}
-            value={restaurant.type}
-            name="type"
-            disabled
-          />
-        </fieldset>
-      </div>
-      <div className="flex flex-center justify-center">
-        <fieldset className="fieldset">
-          <legend className="fieldset-legend">Restaurant Img:</legend>
-          <input
-            type="text"
-            className="input flex items-center gap-2 w-2xl"
-            placeholder="Url..."
-            onChange={() => {}}
-            value={restaurant.img}
-            name="img"
-            disabled
-          />
-        </fieldset>
-      </div>
-      <div className="flex flex-center justify-center">
+      <h1 className="title text-3xl text-center m-5 p-5">
+        Grab Restaurant Delete Confirmation
+      </h1>
+
+      {["title", "type", "img"].map((field) => (
+        <div className="flex justify-center mb-4" key={field}>
+          <fieldset className="fieldset w-full max-w-md">
+            <legend className="fieldset-legend">Restaurant {field.charAt(0).toUpperCase() + field.slice(1)}:</legend>
+            <input
+              type="text"
+              className="input w-full"
+              value={restaurant[field]}
+              disabled
+            />
+          </fieldset>
+        </div>
+      ))}
+
+      <div className="flex justify-center">
         {restaurant.img && (
           <img
             src={restaurant.img}
@@ -103,9 +89,14 @@ const Delete = () => {
           />
         )}
       </div>
-      <div className="flex flex-center justify-center gap-4 mt-6">
-        <a className="btn btn-outline btn-secondary" onClick={handleSubmit}>Delete</a>
-        <a className="btn btn-outline btn-primary" href="/">Cancel</a>
+
+      <div className="flex justify-center gap-4 mt-6">
+        <button className="btn btn-outline btn-secondary" onClick={handleSubmit}>
+          Delete
+        </button>
+        <button className="btn btn-outline btn-primary" onClick={() => navigate("/")}>
+          Cancel
+        </button>
       </div>
     </div>
   );

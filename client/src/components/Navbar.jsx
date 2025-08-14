@@ -1,5 +1,5 @@
 import React from "react";
-const NavBar = () => {
+const Navbar = () => {
   const menuItems = [
     {
       name: "Search",
@@ -56,10 +56,10 @@ const NavBar = () => {
         </ul>
       </div>
       <div className="navbar-end flex gap-2">
-        <a className="btn btn-outline btn-primary">Register</a>
-        <a className="btn btn-outline btn-secondary">Log In</a>
+        <a href="/register" className="btn btn-outline btn-primary" >Register</a>
+        <a href="/login" className="btn btn-outline btn-secondary">Log In</a>
       </div>
     </div>
   );
 };
-export default NavBar;
+export default Navbar;
