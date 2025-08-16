@@ -36,8 +36,8 @@ const Update = () => {
       await RestaurantService.editRestaurant(id, restaurant);
       await Swal.fire({
         icon: "success",
-        title: "Restaurant updated successfully",
-        text: "Your restaurant details have been updated.",
+        title: "Restaurant updated ",
+        text: "Your restaurant details have been updated successfully",
         timer: 1500,
         showConfirmButton: true
       });

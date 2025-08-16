@@ -1,5 +1,9 @@
 import React from "react";
+import { useAuthContext } from "../context/AuthContext";
+import UserProfile from "./UserProfile";
+
 const Navbar = () => {
+  const {user} = useAuthContext();
   const menuItems = [
     {
       name: "Search",
@@ -56,8 +60,19 @@ const Navbar = () => {
         </ul>
       </div>
       <div className="navbar-end flex gap-2">
-        <a href="/register" className="btn btn-outline btn-primary" >Register</a>
-        <a href="/login" className="btn btn-outline btn-secondary">Log In</a>
+
+{user ? (
+  <div>
+    <UserProfile/>
+  </div>
+
+ ) : (
+<div className="space-x-2">
+  {""}
+<a href="/register" className="btn btn-outline btn-primary" >Register</a>
+<a href="/login" className="btn btn-outline btn-secondary">Log In</a>
+    </div>
+  )}
       </div>
     </div>
   );

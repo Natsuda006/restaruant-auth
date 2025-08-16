@@ -41,7 +41,7 @@ const Delete = () => {
       await Swal.fire({
         icon: "success",
         title: "Restaurant deleted successfully.",
-        ะtext: "The restaurant has been removed from the list.",
+        text: "The restaurant has been removed from the list.",
         timer: 1500,
         showConfirmButton:true
       });

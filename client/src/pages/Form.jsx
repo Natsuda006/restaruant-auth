@@ -21,7 +21,8 @@ const Form = () => {
       await RestaurantService.insertRestaurant(restaurant);
       await Swal.fire({
         icon: "success",
-        title: "Restaurant added successfully",
+        title: "Restaurant added ",
+        text: "added Successfully!",
         timer: 1500,
         showConfirmButton: true
       });
