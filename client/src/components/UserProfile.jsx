@@ -31,7 +31,7 @@ const UserProfile = () => {
       {open && (
         <div className="absolute top-full mt-2 right-0 w-48 bg-white rounded shadow z-20 flex flex-col text-left">
           <button className="btn btn-ghost justify-start" onClick={() => { setOpen(false); navigate("/profile"); }}>View Profile</button>
-          <button className="btn btn-ghost justify-start" onClick={() => { setOpen(false); navigate("/settings"); }}>Settings</button>
+          
           <div className="border-t my-1" />
           <button className="btn btn-outline btn-error mt-1" onClick={handleLogOut}>Logout</button>
         </div>
@@ -39,5 +39,4 @@ const UserProfile = () => {
     </div>
   );
 };
-
 export default UserProfile;

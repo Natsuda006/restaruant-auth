@@ -1,19 +1,28 @@
-import  { useState } from 'react';
+import  { useState,useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from "../components/Navbar";
 import Swal from 'sweetalert2';
 import AuthService from '../service/auth.service';
+import { useAuthContext } from '../context/AuthContext';
+
 const Login = () => {
     const navigate = useNavigate();
-    const [user, setUser] = useState({
+    const [loginForm, setLoginForm] = useState({
         username: '',
         password: '',
     });
+    const { login, user } = useAuthContext();
     const [error, setError] = useState("");
+
+    useEffect(() => {
+        if (user) {
+            navigate("/");
+        }
+    }, [user, navigate]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setUser({ ...user, [name]: value });
+        setLoginForm({ ...loginForm, [name]: value });
     };
 
     const handleSubmit = async (e) => {
@@ -21,10 +30,16 @@ const Login = () => {
         setError("");
         try {
             const currentUser = await AuthService.login(
-                user.username,
-                user.password
+                loginForm.username,
+                loginForm.password
             );
             if (currentUser && currentUser.status === 200) {
+                // รวม token, authorities, userInfo ไว้ใน user context
+                login({
+                    ...currentUser.data.userInfo,
+                    token: currentUser.data.token,
+                    authorities: currentUser.data.authorities
+                });
                 await Swal.fire({
                     title: "User Login ",
                     text: "Login Successfully!",
@@ -47,72 +62,7 @@ const Login = () => {
         }
     };
 
-//     const handleSubmit = async () => {
-//   setError("");
-//   try {
-//     const response = await fetch("http://localhost:5000/api/v1/auth/signin", {
-//       method: "POST",
-//       body: JSON.stringify(user),
-//       headers: {
-//         "Content-Type": "application/json"
-//       }
-//     });
 
-//     const data = await response.json();
-
-//     if (response.ok && data.token) {
-//       localStorage.setItem("token", data.token);
-
-//       await Swal.fire({
-//         icon: "success",
-//         title: "Login Success",
-//         text: "Welcome back!",
-//         showConfirmButton: false,
-//         timer: 1500
-//       });
-
-//       window.location.href = "/";
-//     } else {
-//       Swal.fire({
-//         icon: "error",
-//         title: "Login Failed",
-//         text: data.message || "Invalid username or password",
-//       });
-//     }
-//   } catch (error) {
-//     Swal.fire({
-//       icon: "error",
-//       title: "Error",
-//       text: "An error occurred while logging in",
-//     });
-//     console.error("Login error:", error);
-//   }
-// };
-
-
-    // const handleSubmit = async () => 
-    //     {
-    //     setError("");
-    //     try {
-    //         const response = await fetch("http://localhost:5000/api/v1/auth/signin", {
-    //             method: "POST",
-    //             body: JSON.stringify(user),
-    //             headers: {
-    //                 "Content-Type": "application/json"
-    //             }
-    //         });
-    //         const data = await response.json();
-    //         if (response.ok && data.token) {
-    //             localStorage.setItem("token", data.token);
-    //             alert("Login success!");
-    //             window.location.href = "/";
-    //         } else {
-    //             setError(data.message || "Login failed");
-    //         }
-    //     } catch (error) {
-    //         setError("An error occurred while logging in");
-    //     }
-    // };
 
     return (
         <div className="container mx-auto">
@@ -127,13 +77,13 @@ const Login = () => {
                 <div className='flex flex-center justify-center'>
                     <fieldset className="fieldset">
                         <legend className="fieldset-legend">Username:</legend>
-                        <input type="text" className="input flex items-center gap-2 w-2xl" placeholder="Username..." onChange={handleChange} value={user.username} name="username" />
+                        <input type="text" className="input flex items-center gap-2 w-2xl" placeholder="Username..." onChange={handleChange} value={loginForm.username} name="username" />
                     </fieldset>
                 </div>
                 <div className='flex flex-center justify-center'>
                     <fieldset className="fieldset">
                         <legend className="fieldset-legend">Password:</legend>
-                        <input type="password" className="input flex items-center gap-2 w-2xl" placeholder="Password..." onChange={handleChange} value={user.password} name="password" />
+                        <input type="password" className="input flex items-center gap-2 w-2xl" placeholder="Password..." onChange={handleChange} value={loginForm.password} name="password" />
                     </fieldset>
                 </div>
                 <div className="flex flex-center justify-center gap-4 mt-6">
@@ -144,5 +94,4 @@ const Login = () => {
         </div>
     );
 }
-
 export default Login;

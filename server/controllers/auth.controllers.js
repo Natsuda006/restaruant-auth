@@ -98,8 +98,11 @@ authControllers.signIn = async (req, res) => {
         const authorities = [];
         user.getRoles().then((roles) => {
             for (let i = 0; i < roles.length; i++) {
-                authorities.push("ROLES_" + roles[i].name.toUpperCase()); // แก้จาก authControllers.push → authorities.push
-                     res.status(200).send({
+                authorities.push("ROLE_" + roles[i].name.toUpperCase()); // แก้จาก authControllers.push → authorities.push
+            }
+            
+            // ส่ง response หลังดึง roles สำเร็จ
+            res.status(200).send({
                 token: token,
                 authorities: authorities,
                 userInfo: {
@@ -108,10 +111,6 @@ authControllers.signIn = async (req, res) => {
                     email: user.email,
                 },
             });
-            }
-
-            // ส่ง response หลังดึง roles สำเร็จ
-        
         });
 
     }).catch((error) => {
