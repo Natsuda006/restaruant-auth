@@ -15,6 +15,7 @@ const Delete = () => {
   });
 
   useEffect(() => {
+ feature/authentication
     const fetchRestaurant = async () => {
       try {
         const data = await restaurantService.getRestaurantById(id);
@@ -53,6 +54,42 @@ const Delete = () => {
         title: "Error deleting restaurant.",
         text: error?.response?.data?.message || error.message,
       });
+
+    fetch("http://localhost:5000/api/v1/restaurants/" + id)
+    .then((res)=>{
+      //convert to json
+      return res.json()
+    })
+    .then((response)=>{
+      //save to state
+      setRestaurant(response)
+    }).catch((err)=> {
+      //catch error
+      console.log(err.message);
+    }); 
+  },[id])
+    const handleChange = (e) =>{
+        const { name, value } = e.target;
+        setRestaurant({...restaurant , [name]: value});
+    };
+    const handleSubmit = async () => {
+        try {
+            const response = await fetch("http://localhost:5000/restaurants/" + id,{
+                method: "DELETE",
+                body: JSON.stringify(restaurant)
+            });
+            if (response.ok){
+                alert("Restaurant Delete sucessfully")
+                setRestaurant({
+                    title : '',
+                    type : '',
+                    img : '',
+                })
+            }
+        } catch (error) {
+            console.log(error);
+        }
+ main
     }
   };
 

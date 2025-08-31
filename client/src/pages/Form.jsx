@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar";
 import RestaurantService from "../service/restautant.service";
 import Swal from "sweetalert2";
 const Form = () => {
+ feature/authentication
   const navigate = useNavigate();
   const [restaurant, setRestaurant] = useState({
     title: '',
@@ -35,6 +36,38 @@ const Form = () => {
         title: "Error adding restaurant",
         text: error?.response?.data?.message || error.message,
       });
+
+    const [restaurant, setRestaurant] = useState({
+        title : '',
+        type : '',
+        img : '',
+    });
+    const handleChange = (e) =>{
+        const { name, value } = e.target;
+        setRestaurant({...restaurant , [name]: value});
+    };
+    const handleSubmit = async () => {
+        try {
+            const response = await fetch("http://localhost:5000/api/v1/restaurants",{
+                method: "POST",
+                body: JSON.stringify(restaurant),
+                 headers:
+                {
+                  "Content-Type" : "application/json"
+                }
+            });
+            if (response.ok){
+                alert("Restaurant added sucessfully")
+                setRestaurant({
+                    title : '',
+                    type : '',
+                    img : '',
+                })
+            }
+        } catch (error) {
+            console.log(error);
+        }
+ main
     }
   };
 
