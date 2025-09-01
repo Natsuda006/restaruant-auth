@@ -1,16 +1,22 @@
 import express from "express";
-const app = express();
 import dotenv from "dotenv";
+import cors from "cors";
+import db from "./models/index.js";
+import restaurantRouter from "./routers/restaurant.router.js";
+import authRouter from "./routers/auth.routers.js";
+
 dotenv.config();
+
+const app = express();
 const PORT = process.env.PORT || 5001;
 const FRONTEND_URL = process.env.FRONTEND_URL;
 
-import restaurantRouter from "./routers/restaurant.router.js";
-import authRouter from "./routers/auth.routers.js";
-import cors from "cors";
+// CORS setup
+const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173"];
+if (FRONTEND_URL) allowedOrigins.push(FRONTEND_URL);
 
 app.use(cors({
-  origin: ["http://localhost:5173", "http://127.0.0.1:5173",FRONTEND_URL],
+  origin: allowedOrigins,
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "x-access-token"],
 }));
@@ -18,30 +24,40 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-import db from "./models/index.js";
+// Initialize roles
 const role = db.Role;
-
 const initRole = async () => {
-
-   role.create({ id: 1, name: "user" });
-   role.create({ id: 2, name: "moderator" });
-   role.create({ id: 3, name: "admin" });
-
+  await Promise.all([
+    role.create({ id: 1, name: "user" }),
+    role.create({ id: 2, name: "moderator" }),
+    role.create({ id: 3, name: "admin" }),
+  ]);
 };
 
-db.sequelize.sync({ force: true }).then(async () => {  
-   console.log("Database synced");
-    initRole();  
-  });
+// Start server with DB sync
+const startServer = async () => {
+  try {
+    await db.sequelize.sync({ force: true });
+    console.log("Database synced");
 
-app.get("/", (req, res) => {
-  res.send("Restaurant Restful API");
-});
+    await initRole();
+    console.log("Roles initialized");
 
-// use routers
-app.use("/api/v1/restaurants", restaurantRouter);
-app.use("/api/v1/auth", authRouter);
+    // Routers
+    app.use("/api/v1/restaurants", restaurantRouter);
+    app.use("/api/v1/auth", authRouter);
 
-app.listen(PORT, () => {
-  console.log("Listening to http://localhost:" + PORT);
-});
+    app.get("/", (req, res) => {
+      res.send("Restaurant Restful API");
+    });
+
+    app.listen(PORT, () => {
+      console.log(`Listening on http://localhost:${PORT}`);
+    });
+
+  } catch (err) {
+    console.error("Failed to start server:", err);
+  }
+};
+
+startServer();
