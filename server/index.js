@@ -29,10 +29,10 @@ const initRole = async () => {
 
 };
 
-// db.sequelize.sync({ force: true }).then(async () => {  // ใช้ force: true เพื่อสร้างตารางใหม่ (ถ้าอยากล้างข้อมูลเก่า)
-//   console.log("Database synced");
-//    initRole();  // เรียกใช้และรอสร้าง role
-//  });
+db.sequelize.sync({ force: true }).then(async () => {  
+   console.log("Database synced");
+    initRole();  
+  });
 
 app.get("/", (req, res) => {
   res.send("Restaurant Restful API");
