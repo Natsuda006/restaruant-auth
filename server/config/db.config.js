@@ -14,6 +14,7 @@ const config = {
     acquire: 30000,  // เวลา (ms) รอ connection ก่อน timeout
     idle: 10000,     // ปล่อย idle นานแค่ไหนก่อนปิด connection
   },
+  ssl: true, // Always use SSL for secure connection
 };
 
 export default config;
