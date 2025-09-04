@@ -9,39 +9,45 @@ import restaurantRouter from "./routers/restaurant.router.js";
 import authRouter from "./routers/auth.routers.js";
 import cors from "cors";
 
+
+
+// CORS
 app.use(cors({
-  origin: ["http://localhost:5173", "http://127.0.0.1:5173",FRONTEND_URL],
+  origin: ["http://localhost:5173", "http://127.0.0.1:5173", FRONTEND_URL],
   methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "x-access-token"],
+  allowedHeaders: ["Content-Type", "Authorization", "x-access-token"],
 }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-import db from "./models/index.js";
-const role = db.Role;
-
+// สร้าง role หากยังไม่มี
 const initRole = async () => {
-
-   role.create({ id: 1, name: "user" });
-   role.create({ id: 2, name: "moderator" });
-   role.create({ id: 3, name: "admin" });
-
+  try {
+    await Role.create({ id: "1", name: "user" });
+    await Role.create({ id: "2", name: "moderator" });
+    await Role.create({ id: "3", name: "admin" });
+    console.log("Roles created.");
+  } catch (error) {
+    console.error("Error creating roles:", error);
+  }
 };
 
-db.sequelize.sync({ force: true }).then(async () => {  
-   console.log("Database synced");
-    initRole();  
-  });
+// sync database
+sequelize.sync({ force: true }).then(async () => {
+  console.log("Database synced");
+  await initRole();
+});
 
+// Routes
 app.get("/", (req, res) => {
   res.send("Restaurant Restful API");
 });
 
-// use routers
 app.use("/api/v1/restaurants", restaurantRouter);
 app.use("/api/v1/auth", authRouter);
 
+// Start server
 app.listen(PORT, () => {
-  console.log("Listening to http://localhost:" + PORT);
+  console.log(`Listening to http://localhost:${PORT}`);
 });
