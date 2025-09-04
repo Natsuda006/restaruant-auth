@@ -8,6 +8,7 @@ const FRONTEND_URL = process.env.FRONTEND_URL;
 import restaurantRouter from "./routers/restaurant.router.js";
 import authRouter from "./routers/auth.routers.js";
 import cors from "cors";
+import sequelize from "./db.js";
 
 
 
