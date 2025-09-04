@@ -1,16 +1,22 @@
 import express from "express";
-const app = express();
 import dotenv from "dotenv";
 dotenv.config();
-const PORT = process.env.PORT || 5000;
-const FRONTEND_URL = process.env.FRONTEND_URL;
 
+import cors from "cors";
+
+// import routers
 import restaurantRouter from "./routers/restaurant.router.js";
 import authRouter from "./routers/auth.routers.js";
-import cors from "cors";
-import sequelize from "./db.js";
 
+// import sequelize
+import sequelize from "./models/db.js"; // <-- แก้ตรงนี้
 
+// import Role model (ถ้าใช้ Role.create)
+import Role from "./models/role.model.js"; // path ตามจริง
+
+const app = express();
+const PORT = process.env.PORT || 5000;
+const FRONTEND_URL = process.env.FRONTEND_URL;
 
 // CORS
 app.use(cors({
