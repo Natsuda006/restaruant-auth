@@ -25,7 +25,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/v1/restaurants", restaurantRouter);
-app.use("/api/v1/auth", authRouter);   // ✅ เพิ่มบรรทัดนี้
+app.use("/api/v1/auth", authRouter);  
 
 app.listen(PORT, () => {
   console.log(`Listening on http://localhost:${PORT}`);
